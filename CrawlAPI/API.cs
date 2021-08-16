@@ -13,7 +13,6 @@ using Mono.Cecil;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Reflection.Emit;
@@ -25,6 +24,18 @@ namespace CrawlAPI
     public class CrawlAPI : BaseUnityPlugin
     {
         public void Awake()
+        {
+            string dir = Assembly.GetExecutingAssembly().Location;
+            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Console.WriteLine(asm.FullName);
+            }
+            //Console.WriteLine();
+            
+
+            Awake2();
+        }
+        public void Awake2()
         {
             //TODO: figure out how to fix stack traces/
             //probable causes: loading by bepin causes mono to forget where pdb is.(very probable)

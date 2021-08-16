@@ -17,25 +17,6 @@ namespace CrawlAPI
 
         public static void Init()
         {
-            //Assembly.GetCallingAssembly().
-            /*
-            try {
-
-                bruh();
-            }
-            catch(Exception e)
-            {
-                //foreach(var i in e.Data.Keys)
-                //{
-                //    Console.WriteLine(i);
-                //}
-
-                //Console.WriteLine(e.Data);
-                StackTrace st = new StackTrace(true);
-                
-                //Console.WriteLine(st.GetFrame(0).GetMethod().);
-                Console.WriteLine(new StackFrame("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Crawl\\BepInEx\\plugins\\CrawlAPI\\CrawlAPI.dll", 20));
-            }*/
             customDeities = new List<Deity>();
             On.MenuMain.Start += MenuStartHook;
 

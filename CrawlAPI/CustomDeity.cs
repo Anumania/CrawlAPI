@@ -32,16 +32,26 @@ namespace CrawlAPI
         }
         public void SetToDefaults()
         {
-
             //FieldInfo[] targetFieldInfo = typeof(Deity).GetFields(BindingFlags.Instance | BindingFlags.NonPublic); //reference to field info of the class
             FieldInfo[] thisFieldInfo = typeof(CustomDeity).GetFields(BindingFlags.Instance | BindingFlags.Public); //reference to the field info here
+            if (SystemDeity.Instance == null) //if there are any dieties calling this early,
+                GameObject.Instantiate(Resources.FindObjectsOfTypeAll<SystemDeity>().FirstOrDefault()); //spawn SystemDeity early so that things can use GetDeity.
             Deity inst = SystemDeity.GetDeity(0); //hold this bc its referenced a ton
+
             foreach(FieldInfo fieldInfo in thisFieldInfo)
             {
                 FieldInfo targetFieldInfo = typeof(Deity).GetField(fieldInfo.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                 if(targetFieldInfo!= null)
                 {
                     object val = targetFieldInfo.GetValue(inst);
+                    
+                    if(val != null)
+                    {
+                        if(val.GetType() == typeof(GameObject[]))
+                        {
+                            val = ((GameObject[])val).Clone();
+                        }
+                    }
                     fieldInfo.SetValue(this, val);
                 }
                 else
@@ -51,9 +61,9 @@ namespace CrawlAPI
             }
         }
         //text
-        public string m_name = "testDeity";
-        public string m_text = "no idea what this is";
-        public string m_textFlavour = "flavor text";
+        public string m_name = "";
+        public string m_text = "";
+        public string m_textFlavour = "";
 
         //anim
         public exSpriteAnimClip m_portrait;

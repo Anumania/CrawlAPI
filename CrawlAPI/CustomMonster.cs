@@ -30,6 +30,48 @@ namespace CrawlAPI
             }
             return "still working on it";
         }
+        //gives ingame immutable player equivalent of custom monster. TODO: make the opposite for immutable player
+        public void ToMonster(Player p)
+        {
+            //Player p = new Player();
+
+            foreach (var field in this.GetType().GetFields())
+            {
+                try
+                {
+                    //Console.WriteLine(field.Name);
+                    FieldInfo fldInfo = p.GetType().GetField(field.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                    if (fldInfo == null)
+                    {
+                        continue;
+                    }
+                    if (fldInfo.Name == "m_evolveToCostOverride")
+                    {
+                        Player.EvolveCostOverride[] e = MonsterAPI.EvolveCostOverride.convert((MonsterAPI.EvolveCostOverride[])field.GetValue(this));
+
+                        fldInfo.SetValue(p, e);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            fldInfo.SetValue(p, field.GetValue(this));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            fldInfo.SetValue(p, null);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Console.WriteLine(field.Name);
+                }
+            }
+            //return p;
+        }
         public void SetToDefaults()
         {
             Player hero = MonsterAPI.GetMonster("EnemyGhoul");

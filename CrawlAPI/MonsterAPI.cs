@@ -23,78 +23,23 @@ namespace CrawlAPI
 
         public static void AddMonster(this CustomDeity deity, CustomMonster monst, int slotIndex) //just in case you want to not just say deity.m_startingMonsters[0] = monst?
         {
-            CustomDeity bart = deity;
             GameObject[] startingMonsters = deity.m_startingMonsters;
-
-            Player p = startingMonsters[slotIndex].GetComponent<Player>();
-            //a.SetActive(true);
-            foreach (var field in monst.GetType().GetFields())
-            {
-                //Console.WriteLine(field.Name);
-                FieldInfo fldInfo = p.GetType().GetField(field.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                if (fldInfo == null)
-                {
-                    continue;
-                }
-                if (fldInfo.Name == "m_evolveToCostOverride")
-                {
-                    Player.EvolveCostOverride[] e = EvolveCostOverride.convert((EvolveCostOverride[])field.GetValue(monst));
-
-                    fldInfo.SetValue(p, e);
-                }
-                else
-                {
-                    try
-                    {
-                        fldInfo.SetValue(p, field.GetValue(monst));
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        fldInfo.SetValue(p, null);
-                    }
-                }
-            }
-            deity.m_startingMonsters = startingMonsters;
-            //APIHelpers.PrintPlayer(p);
-            //bart.GetType().GetField("m_startingMonsters", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(bart, startingMonsters);
+            GameObject startingMonster = GameObject.Instantiate(startingMonsters[slotIndex]);
+            //Player p = startingMonsters[slotIndex].GetComponent<Player>();
+            monst.ToMonster(startingMonster.GetComponent<Player>());
+            startingMonsters[slotIndex] = startingMonster;
+            GameObject.DontDestroyOnLoad(startingMonster);
+            startingMonster.SetActive(false);
         }
         public static void AddMonster(this Deity deity, CustomMonster monst, int slotIndex) //extension method for adding monsters to deity
         {
-            Deity bart = deity; //lol
-            GameObject[] startingMonsters = bart.GetStartingMonsters();
-
-            Player p = startingMonsters[slotIndex].GetComponent<Player>();
-            //a.SetActive(true);
-            foreach (var field in monst.GetType().GetFields())
-            {
-                //Console.WriteLine(field.Name);
-                FieldInfo fldInfo = p.GetType().GetField(field.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                if (fldInfo == null)
-                {
-                    continue;
-                }
-                if (fldInfo.Name == "m_evolveToCostOverride")
-                {
-                    Player.EvolveCostOverride[] e = EvolveCostOverride.convert((EvolveCostOverride[])field.GetValue(monst));
-
-                    fldInfo.SetValue(p, e);
-                }
-                else
-                {
-                    try
-                    {
-                        fldInfo.SetValue(p, field.GetValue(monst));
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        fldInfo.SetValue(p, null);
-                    }
-                }
-            }
-            //APIHelpers.PrintPlayer(p);
-            //bart.GetType().GetField("m_startingMonsters", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(bart, startingMonsters);
+            GameObject[] startingMonsters = deity.GetStartingMonsters();
+            GameObject startingMonster = GameObject.Instantiate(startingMonsters[slotIndex]);
+            //Player p = startingMonsters[slotIndex].GetComponent<Player>();
+            monst.ToMonster(startingMonster.GetComponent<Player>());
+            startingMonsters[slotIndex] = startingMonster;
+            GameObject.DontDestroyOnLoad(startingMonster);
+            startingMonster.SetActive(false);
         }
         public class EvolveCostOverride
         {

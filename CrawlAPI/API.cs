@@ -25,18 +25,6 @@ namespace CrawlAPI
     {
         public void Awake()
         {
-            string dir = Assembly.GetExecutingAssembly().Location;
-            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Console.WriteLine(asm.FullName);
-            }
-            //Console.WriteLine();
-            
-
-            Awake2();
-        }
-        public void Awake2()
-        {
             //TODO: figure out how to fix stack traces/
             //probable causes: loading by bepin causes mono to forget where pdb is.(very probable)
             //version difference (use mono to compile instead of ms.net)
@@ -130,5 +118,10 @@ namespace CrawlAPI
         {
             Debug.developerConsoleVisible = false;
         }
+    }
+    [AttributeUsage(AttributeTargets.Method,AllowMultiple = true)]
+    public class CrawlPlugin : Attribute
+    {
+
     }
 }

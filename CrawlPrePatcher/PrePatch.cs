@@ -35,7 +35,6 @@ namespace CrawlPrePatcher
         //this one is just for testing, and goes unused.
         public static void Patch2(AssemblyDefinition assembly)
         {
-            Console.WriteLine("goin");
             Collection<TypeDefinition> baseTypes = new Collection<TypeDefinition>();
             //MakeSavesLocal(assembly);
             Collection<TypeDefinition> col = assembly.MainModule.Types;
@@ -83,7 +82,6 @@ namespace CrawlPrePatcher
         {
             try
             {
-                Console.WriteLine("yeah");
                 //MethodDefinition mthd = ass.MainModule.GetType("SaveHelper").NestedTypes.Where(e => e.Name.Contains("CoroutineStartSave")).FirstOrDefault().Methods.First(); //enumerators suck to edit.
                 var mthd = ass.MainModule.GetType("SaveHelper").NestedTypes;
                 foreach( var a in mthd)

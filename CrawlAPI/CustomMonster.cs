@@ -125,7 +125,7 @@ namespace CrawlAPI
         public exSpriteAnimClip m_animationKnockback; //fill
         public exSpriteAnimClip m_animationStatue; //fill 
         public PlayerShadow m_shadowPrefab; //fill
-        public bool allowRedShadow = true;
+        public bool m_allowRedShadow = true;
         public DamageEffectData[] m_spawnOnHit; //fill
         public DamageEffectData[] m_spawnOnDeath; //fill
         public bool m_bloodEffectsEnabled = true;

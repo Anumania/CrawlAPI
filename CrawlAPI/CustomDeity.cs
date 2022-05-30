@@ -14,6 +14,7 @@ namespace CrawlAPI
 
         }
 
+        //should probably make this recursive somehow.
         public override string ToString()
         {
             FieldInfo[] fieldInfos = this.GetType().GetFields();
@@ -38,21 +39,29 @@ namespace CrawlAPI
                 GameObject.Instantiate(Resources.FindObjectsOfTypeAll<SystemDeity>().FirstOrDefault()); //spawn SystemDeity early so that things can use GetDeity.
             Deity inst = SystemDeity.GetDeity(0); //hold this bc its referenced a ton
 
+            //go through all fields in CustomDeity
             foreach(FieldInfo fieldInfo in thisFieldInfo)
             {
+                //if Deity has a field that has the same name
                 FieldInfo targetFieldInfo = typeof(Deity).GetField(fieldInfo.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                 if(targetFieldInfo!= null)
                 {
+                    //get the value of the customdeity field's value
                     object val = targetFieldInfo.GetValue(inst);
                     
                     if(val != null)
                     {
+                        //if its a game object, try to clone the gameobject, this wont do much but it might fix a couple easy errors.
                         if(val.GetType() == typeof(GameObject[]))
                         {
                             val = ((GameObject[])val).Clone();
                         }
+                        else
+                        {
+                            //set the value of this customdeity to the values in the default deity
+                            fieldInfo.SetValue(this, val);
+                        }
                     }
-                    fieldInfo.SetValue(this, val);
                 }
                 else
                 {

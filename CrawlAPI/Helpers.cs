@@ -9,6 +9,7 @@ namespace CrawlAPI
 {
     public static class APIHelpers
     {
+        //this whole script SUCKS and i want it gone.
         public static AssemblyDefinition AssemblyCS; //unity c#
         public static void Init()
         {
@@ -26,6 +27,7 @@ namespace CrawlAPI
         {
 
         }
+        //this sucks, and should go away
         public static void PrintPlayer(Player i)
         {
             foreach (var j in i.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic))

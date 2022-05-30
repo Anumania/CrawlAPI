@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="DeityAPI.cs" />
     <Compile Include="CustomDeity.cs" />
     <Compile Include="Helpers.cs" />

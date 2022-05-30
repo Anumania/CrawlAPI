@@ -25,44 +25,23 @@ namespace CrawlAPI
     {
         public void Awake()
         {
-            //TODO: figure out how to fix stack traces/
-            //probable causes: loading by bepin causes mono to forget where pdb is.(very probable)
-            //version difference (use mono to compile instead of ms.net)
-            //unity doesnt like debugging (no because it still shows SOME line info later in the stack)
-            //StackTrace st = new StackTrace(true);
-            //Console.WriteLine(System.Environment.);
-            //TypeReference thevoid = AssemblyDefinition.ReadAssembly("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Crawl\\BepInEx\\plugins\\CrawlAPI\\CrawlAPI.dll").MainModule.ImportReference(typeof(void));
-            //ISymbolReader sr = new Mono.Cecil.Pdb.NativePdbReaderProvider().GetSymbolReader(AssemblyDefinition.ReadAssembly("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Crawl\\BepInEx\\plugins\\CrawlAPI\\CrawlAPI.dll").MainModule, "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Crawl\\BepInEx\\plugins\\CrawlAPI\\CrawlAPI.pdb");
-            //Console.WriteLine(sr.Read(new MethodDefinition("Awake",Mono.Cecil.MethodAttributes.Public,thevoid)));
-            //Console.WriteLine(new MethodDefinition("Awake", Mono.Cecil.MethodAttributes.Public, thevoid).Name);
-
-            //Console.WriteLine(st.GetFrame(0));
-            //System.Diagnostics.
-            //exAtlas[] array = (exAtlas[])Resources.FindObjectsOfTypeAll(typeof(exAtlas));
-
+            //run init for all apis.
             APIHelpers.Init();
             MonsterAPI.Init();
             DeityAPI.Init();
-            IFormatter form = new BinaryFormatter();
+
+            Util.GetField(new CustomMonster(), "m_isHero");
+
+            //make an object that will continuously turn off unity's debug console, because it opens every time anyone Debug.Log()'s
             On.MenuMain.Update += (a, b) => { Debug.developerConsoleVisible = false; }; //in debug mode, this dev console sucks
-
-            UnityEngine.Object[] objects = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
-
             GameObject noConsole = new GameObject();
             noConsole.AddComponent<NoConsole>();
             GameObject.DontDestroyOnLoad(noConsole);
 
+            //add an entry to the debug menu
             SystemDebug.AddDebugItem("I - Player", "change to debug char", new Action(this.changeToTestChar));
 
-            List<Type> objList = new List<Type>();
-            foreach (UnityEngine.Object i in objects)
-            {
-                if (!objList.Contains(i.GetType()))
-                {
-                    objList.Add(i.GetType());
-                    //Console.WriteLine(i.GetType());
-                }
-            }
+            //add a bunch of hooks that we will use to set up the custom deity menu
             On.MenuDeitySelectPlayer.Start += MenuDeitySelectPlayer_Start;
             IL.MenuDeitySelectPlayer.Update += IL_MenuDeitySelectPlayer_Update;
             On.MenuDeitySelectPlayer.Update += MenuDeitySelectPlayer_Update;
@@ -71,32 +50,36 @@ namespace CrawlAPI
         private void MenuDeitySelectPlayer_Update(On.MenuDeitySelectPlayer.orig_Update orig, MenuDeitySelectPlayer self)
         {
 
+            //currently unused
             orig(self);
             //throw new NotImplementedException();
         }
 
         private void IL_MenuDeitySelectPlayer_Update(ILContext il)
         {
+            //this has to be an il patch, assuming crawl never updates this function, this should always work, but we should look out for alternatives.
             il.IL.Body.Instructions[32].OpCode = Mono.Cecil.Cil.OpCodes.Ldc_I4_2; //make trials display as the second to last option, not the last, because custom deities display as last.
         }
 
         private void MenuDeitySelectPlayer_Start(On.MenuDeitySelectPlayer.orig_Start orig, MenuDeitySelectPlayer self)
         {
-            self.gameObject.AddComponent<MenuDeitySelectPlayerExtension>(); // catch custom mod deity related messages.
+            //we need a component to catch unity messages, which is used in the menu system.
+            self.gameObject.AddComponent<MenuDeitySelectPlayerExtension>();
             orig(self);
-            FieldInfo menu = self.GetType().GetField("m_menu", BindingFlags.Instance | BindingFlags.NonPublic); //add a new button that shows mod deities
+
+            //these next couple of lines all are used to add a new button and make sure that button is hooked correctly
             MethodInfo addItemToMenu = typeof(MenuTextMenu).GetMethod("AddItem", BindingFlags.Public | BindingFlags.Instance);
             MenuTextMenuItemData modDeitiesList = new MenuTextMenuItemData
             {
                 m_enabled = true,
-                m_prefabMenuItem = (MenuTextMenuItem)self.GetType().GetField("m_prefabMenuItemTrial", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(self),
+                m_prefabMenuItem = (MenuTextMenuItem)Util.GetField(self, "m_prefabMenuItemTrial") ,
                 m_message = "MsgOnSelectModDeities",
             };
-            addItemToMenu.Invoke(menu.GetValue(self), new object[] { modDeitiesList });
+            addItemToMenu.Invoke(Util.GetField(self,"m_menu"), new object[] { modDeitiesList });
         }
         public void changeToTestChar() //debug command TODO:only add once
         {
-            
+            //does not work currently, but should.
             GameObject debugMonst = SystemDeity.GetDeity(0).GetStartingMonster(0);
             SystemPlayers.GetPlayer(0).OnGameObjectAssigned(Instantiate(debugMonst),false,true,true);
         }

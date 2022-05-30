@@ -10,6 +10,7 @@ namespace CrawlAPI
 {
     public class DeityAPI
     {
+
         //TODO: standardize either the use of "custom deity" or "modded deity" terminology in the api;
         public static List<Deity> customDeities;
         public static List<MenuDeitySelectPlayer> deitySelectMenu;
@@ -20,47 +21,42 @@ namespace CrawlAPI
             customDeities = new List<Deity>();
             On.MenuMain.Start += MenuStartHook;
 
-            On.MenuDeitySelectPlayer.Update += (a, b) => //god i should stop using a and b for these.
+            On.MenuDeitySelectPlayer.Update += (orig, self) => 
             {
-                
-                a(b);
-                
-                int plindex = (int)typeof(MenuDeitySelectPlayer).GetField("m_playerId", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(b); //player index
-                
+                orig(self);
+                //get the player index
+                int plindex = (int)Util.GetField(self, "m_playerId"); 
+
+
                 bool isModMenuEnabled = customDeityMenu[plindex].gameObject.activeInHierarchy;
 
                 if (isModMenuEnabled)
                 {
-                    //Console.WriteLine(customDeityMenu[plindex].GetSelectedId());
-                    //Console.WriteLine(customDeityMenu[plindex].GetSelectedId() - 1);
-
-                    ((GameObject)typeof(MenuDeitySelectPlayer).GetField("m_arrowL", (BindingFlags)36).GetValue(b)).SetActive(customDeityMenu[plindex].HasPrevColumn());
-                    ((GameObject)typeof(MenuDeitySelectPlayer).GetField("m_arrowR", (BindingFlags)36).GetValue(b)).SetActive(customDeityMenu[plindex].HasNextColumn());
-                    b.SetDeity(customDeities[customDeityMenu[plindex].GetSelectedId()], true);
+                    ((GameObject)Util.GetField(self, "m_arrowL")).SetActive(customDeityMenu[plindex].HasPrevColumn());
+                    ((GameObject)Util.GetField(self, "m_arrowR")).SetActive(customDeityMenu[plindex].HasPrevColumn());
+                    self.SetDeity(customDeities[customDeityMenu[plindex].GetSelectedId()], true);
                 }
-                //Console.WriteLine(typeof(MenuDeitySelectPlayer).GetField("m_menuTrials",BindingFlags.)); //fuck i forgot binding flags
-                else if (!((MenuTextMenu)typeof(MenuDeitySelectPlayer).GetField("m_menuTrials",BindingFlags.Instance | BindingFlags.NonPublic).GetValue(b)).gameObject.activeSelf) //if we arent in trials either (we must be in normal select menu)
+                else if (!((MenuTextMenu)Util.GetField(self,"m_menuTrials")).gameObject.activeSelf) //if we arent in trials either (we must be in normal select menu)
                 {
-                    MenuTextMenu normalMenu = ((MenuTextMenu)typeof(MenuDeitySelectPlayer).GetField("m_menu", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(b));;
-                    //Console.WriteLine("in normal select menu");
-                    //typeof(MenuDeitySelectPlayer).GetField("m_selectedItemType", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(b,5); //normally we would use an enum, but the eMenuItemType enum doesnt have a type for the mod menu, so make one (ish)
+
+                    MenuTextMenu normalMenu = (MenuTextMenu)Util.GetField(self,"m_menu");
                     if (normalMenu.GetSelectedId() == normalMenu.GetItemCount() - 1) //if we are on the last index of the entries
                     {
                         
-                        ((global::GUIText)typeof(MenuDeitySelectPlayer).GetField("m_text", (BindingFlags)36).GetValue(b)).SetText("Access Deities Added by Mods"); //getting lazy typing out the same binding flags every time.
-                        ((TextMesh)typeof(MenuDeitySelectPlayer).GetField("m_name", (BindingFlags)36).GetValue(b)).text = "Custom";
+                        ((global::GUIText)Util.GetField(self, "m_text")).SetText("Access Deities Added by Mods"); 
+                        ((TextMesh)Util.GetField(self, "m_name")).text = "Custom";
 
-                        float randomAnimTimer = (float)typeof(MenuDeitySelectPlayer).GetField("m_randomAnimTimer", (BindingFlags)36).GetValue(b);
+                        float randomAnimTimer = (float)Util.GetField(self, "m_randomAnimTimer");
                         randomAnimTimer -= Time.deltaTime;
                         if (randomAnimTimer < 0f)
                         {
                             int randomId = (int)UnityEngine.Random.Range(0, DeityAPI.customDeities.Count);
                             Deity deity = customDeities[(randomId)];
-                            b.SetDeityPortrait(deity);
-                            b.SetDeityMonsters(deity);
+                            self.SetDeityPortrait(deity);
+                            self.SetDeityMonsters(deity);
                             randomAnimTimer = 0.15f;
                         }
-                        typeof(MenuDeitySelectPlayer).GetField("m_randomAnimTimer", (BindingFlags)36).SetValue(b, randomAnimTimer); ;
+                        Util.SetField(self, "m_randomAnimTimer", randomAnimTimer);
                     }
                 }
             };

@@ -48,21 +48,21 @@ namespace CrawlAPI
                 price = _price;
                 m_evolveTo = evolveTo;
             }
-            public static implicit operator Player.EvolveCostOverride(EvolveCostOverride e)
+            /*public static implicit operator Player.EvolveCostOverride(EvolveCostOverride e)
             {
                 var eo = new Player.EvolveCostOverride();
                 eo.m_evolveTo = e.m_evolveTo;
                 eo.price = e.price;
                 return eo;
-            }
-            public static Player.EvolveCostOverride[] convert(EvolveCostOverride[] e)
+            }*/
+            public static object[] convert(EvolveCostOverride[] e)
             {
-                var eoa = new Player.EvolveCostOverride[e.Length];
+                var eoa = new object[e.Length];
                 for (int i = 0; i < eoa.Length; i++)
                 {
-                    var eo = new Player.EvolveCostOverride();
-                    eo.m_evolveTo = e[i].m_evolveTo;
-                    eo.price = e[i].price;
+                    var eo = Activator.CreateInstance(typeof(Player).GetNestedType("EvolveCostOverride"));
+                    Util.SetField(eo, "m_evolveTo", e[i].m_evolveTo);
+                    Util.SetField(eo, "price", e[i].price);
                     eoa[i] = eo;
                 }
                 return eoa;

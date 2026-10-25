@@ -47,9 +47,10 @@ namespace CrawlAPI
                     }
                     if (fldInfo.Name == "m_evolveToCostOverride")
                     {
-                        Player.EvolveCostOverride[] e = MonsterAPI.EvolveCostOverride.convert((MonsterAPI.EvolveCostOverride[])field.GetValue(this));
+                        //TODO: reimplement me
+                        //Player.EvolveCostOverride[] e = MonsterAPI.EvolveCostOverride.convert((MonsterAPI.EvolveCostOverride[])field.GetValue(this));
 
-                        fldInfo.SetValue(p, e);
+                        //fldInfo.SetValue(p, e);
                     }
                     else
                     {

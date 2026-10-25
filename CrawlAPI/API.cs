@@ -23,6 +23,10 @@ namespace CrawlAPI
     [BepInPlugin("org.anumania.plugins.crawlapi", "CrawlAPI", "1.0.0.0")]
     public class CrawlAPI : BaseUnityPlugin
     {
+        public MethodInfo getPrivateMethod(Type type, String name)
+        {
+            return type.GetMethod(name, BindingFlags.NonPublic);
+        }
         public void Awake()
         {
             //run init for all apis.
@@ -33,7 +37,8 @@ namespace CrawlAPI
             Util.GetField(new CustomMonster(), "m_isHero");
 
             //make an object that will continuously turn off unity's debug console, because it opens every time anyone Debug.Log()'s
-            On.MenuMain.Update += (a, b) => { Debug.developerConsoleVisible = false; }; //in debug mode, this dev console sucks
+            //On.MenuMain.Update += (a, b) => { Debug.developerConsoleVisible = false; }; //in debug mode, this dev console sucks
+            //var d = new Hook(getPrivateMethod(typeof(MenuMain), "Update"), (a, b) => { Debug.developerConsoleVisible = false; });
             GameObject noConsole = new GameObject();
             noConsole.AddComponent<NoConsole>();
             GameObject.DontDestroyOnLoad(noConsole);

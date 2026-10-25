@@ -34,7 +34,7 @@ namespace CrawlAPI
                 {
                     ((GameObject)Util.GetField(self, "m_arrowL")).SetActive(customDeityMenu[plindex].HasPrevColumn());
                     ((GameObject)Util.GetField(self, "m_arrowR")).SetActive(customDeityMenu[plindex].HasPrevColumn());
-                    self.SetDeity(customDeities[customDeityMenu[plindex].GetSelectedId()], true);
+                    typeof(MenuDeitySelectPlayer).GetMethod("SetDeity", BindingFlags.NonPublic).Invoke(self, new object[]{ customDeities[customDeityMenu[plindex].GetSelectedId()], true});
                 }
                 else if (!((MenuTextMenu)Util.GetField(self,"m_menuTrials")).gameObject.activeSelf) //if we arent in trials either (we must be in normal select menu)
                 {
@@ -52,8 +52,8 @@ namespace CrawlAPI
                         {
                             int randomId = (int)UnityEngine.Random.Range(0, DeityAPI.customDeities.Count);
                             Deity deity = customDeities[(randomId)];
-                            self.SetDeityPortrait(deity);
-                            self.SetDeityMonsters(deity);
+                            typeof(MenuDeitySelectPlayer).GetMethod("SetDeityPortrait", BindingFlags.NonPublic).Invoke(self, new object[] { deity });
+                            typeof(MenuDeitySelectPlayer).GetMethod("SetDeityMonsters", BindingFlags.NonPublic).Invoke(self, new object[] { deity });
                             randomAnimTimer = 0.15f;
                         }
                         Util.SetField(self, "m_randomAnimTimer", randomAnimTimer);
@@ -206,7 +206,8 @@ namespace CrawlAPI
             MenuDeitySelectPlayer mdsp = GetComponent<MenuDeitySelectPlayer>();
             int index = MenuPlayerNumber.GetPlayerNumber(mdsp.gameObject);
 
-            mdsp.SetDeity(DeityAPI.customDeities[DeityAPI.customDeityMenu[index].GetSelectedId()],false);
+            //TODO reimplement me
+            //mdsp.SetDeity(DeityAPI.customDeities[DeityAPI.customDeityMenu[index].GetSelectedId()],false);
             base.SendMessageUpwards("MsgQueueState", "DeitySelected");
 
         }

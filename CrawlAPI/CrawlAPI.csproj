@@ -30,7 +30,7 @@
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\MMHOOK_Assembly-CSharp.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\BepInEx\core\Mono.Cecil.dll</HintPath>
@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\Mono.Security.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
@@ -49,12 +50,15 @@
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\mscorlib.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\System.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\System.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Crawl\Crawl_Data\Managed\UnityEngine.dll</HintPath>

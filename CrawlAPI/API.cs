@@ -104,7 +104,7 @@ namespace CrawlAPI
     {
         void OnGUI()
         {
-            Debug.developerConsoleVisible = false;
+            UnityEngine.Debug.developerConsoleVisible = false;
         }
     }
     [AttributeUsage(AttributeTargets.Method,AllowMultiple = true)]

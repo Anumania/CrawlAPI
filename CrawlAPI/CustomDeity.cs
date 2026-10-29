@@ -56,11 +56,8 @@ namespace CrawlAPI
                         {
                             val = ((GameObject[])val).Clone();
                         }
-                        else
-                        {
-                            //set the value of this customdeity to the values in the default deity
-                            fieldInfo.SetValue(this, val);
-                        }
+                        //set the value of this customdeity to the values in the default deity
+                        fieldInfo.SetValue(this, val);
                     }
                 }
                 else

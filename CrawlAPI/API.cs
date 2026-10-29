@@ -1,34 +1,40 @@
-﻿using System;
-using BepInEx;
-using MonoMod.RuntimeDetour;
-using MonoMod.Cil;
-using Mono.Cecil.Cil;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using Mono.Collections.Generic;
-using Mono.Collections;
-using MonoMod.Utils;
+﻿using BepInEx;
 using Mono.Cecil;
-using System.Linq;
+using Mono.Cecil.Cil;
+using Mono.Collections;
+using Mono.Collections.Generic;
+using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
+using MonoMod.Utils;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.Reflection.Emit;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 namespace CrawlAPI
 {
     [BepInPlugin("org.anumania.plugins.crawlapi", "CrawlAPI", "1.0.0.0")]
     public class CrawlAPI : BaseUnityPlugin
     {
-        public MethodInfo getPrivateMethod(Type type, String name)
+        // Import the native Win32 MessageBox function from user32.dll
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+
+        public static MethodInfo getPrivateMethod(Type type, String name)
         {
-            return type.GetMethod(name, BindingFlags.NonPublic);
+            return type.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Instance);
         }
         public void Awake()
         {
+            MessageBox(IntPtr.Zero, "Hello from native Win32 API!", "Win32 Message Box", 0x40);
             //run init for all apis.
             APIHelpers.Init();
             MonsterAPI.Init();

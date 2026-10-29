@@ -34,7 +34,7 @@ namespace CrawlAPI
         }
         public void Awake()
         {
-            MessageBox(IntPtr.Zero, "Hello from native Win32 API!", "Win32 Message Box", 0x40);
+            MessageBox(IntPtr.Zero, "Attach Debugger Now", "Debugger Screen", 0x40);
             //run init for all apis.
             APIHelpers.Init();
             MonsterAPI.Init();

@@ -54,6 +54,14 @@ namespace CrawlAPI
             On.MenuDeitySelectPlayer.Start += MenuDeitySelectPlayer_Start;
             IL.MenuDeitySelectPlayer.Update += IL_MenuDeitySelectPlayer_Update;
             On.MenuDeitySelectPlayer.Update += MenuDeitySelectPlayer_Update;
+            On.Player.Init += Player_Init;
+        }
+
+        private void Player_Init(On.Player.orig_Init orig, Player self)
+        {
+            //scuffed
+            Util.SetField(self, "m_transform", self.transform);
+            orig(self);
         }
 
         private void MenuDeitySelectPlayer_Update(On.MenuDeitySelectPlayer.orig_Update orig, MenuDeitySelectPlayer self)

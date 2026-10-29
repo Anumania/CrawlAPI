@@ -13,7 +13,10 @@
 	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	  <NoCompilerStandardLib>true</NoCompilerStandardLib>
 	  <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-	  <BaseOutputPath></BaseOutputPath>
+	  <OutputPath>C:\Program Files (x86)\Steam\steamapps\common\Crawl\BepInEx\plugins\CrawlAPI</OutputPath>
+
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

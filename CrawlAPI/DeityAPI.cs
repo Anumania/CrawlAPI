@@ -50,7 +50,7 @@ namespace CrawlAPI
                         randomAnimTimer -= Time.deltaTime;
                         if (randomAnimTimer < 0f)
                         {
-                            int randomId = (int)UnityEngine.Random.Range(0, DeityAPI.customDeities.Count);
+                            int randomId = (int)UnityEngine.Random.Range(0, DeityAPI.customDeities.Count-1);
                             Deity deity = customDeities[(randomId)];
                             CrawlAPI.getPrivateMethod(typeof(MenuDeitySelectPlayer), "SetDeityPortrait").Invoke(self, new object[] { deity });
                             CrawlAPI.getPrivateMethod(typeof(MenuDeitySelectPlayer), "SetDeityMonsters").Invoke(self, new object[] { deity });
